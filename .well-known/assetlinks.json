@@ -1,0 +1,14 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.aistudio.domestico.kzpqt",
+      "sha256_cert_fingerprints": [
+        "72:63:E6:E8:2B:2F:33:A9:84:F3:86:5E:66:49:13:9F:C5:75:91:27:33:74:D7:AC:3E:0A:18:61:00:99:AF:43",
+        "88:8A:70:B6:2B:97:32:7F:BE:A9:FA:02:FD:7F:C0:DF:75:71:72:55:3A:6E:18:27:B0:B2:0D:94:89:B7:17:69",
+        "72:18:C6:4C:24:AD:1F:AC:54:93:25:27:70:89:3E:5A:A5:66:7D:96:33:8E:77:F2:F8:27:0A:6C:59:F3:45:4D"
+      ]
+    }
+  }
+]
