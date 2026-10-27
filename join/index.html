@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Domestico – Davet</title>
+  <meta name="description" content="Domestico hane daveti. Domestico household invite.">
+  <meta name="robots" content="noindex">
+  <style>
+    :root {
+      --bg: #edf2f8;
+      --surface: #ffffff;
+      --text: #171c1f;
+      --muted: #45464d;
+      --accent: #1e293b;
+      --code-bg: #f0f4f8;
+      --ok: #15803d;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111315;
+        --surface: #1a1d20;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --accent: #38bdf8;
+        --code-bg: #23272b;
+        --ok: #4ade80;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 28px 22px;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.08);
+      text-align: center;
+    }
+    .emoji { font-size: 44px; line-height: 1; }
+    h1 { font-size: 1.4rem; margin: 14px 0 6px; }
+    p { color: var(--muted); line-height: 1.5; margin: 0 0 18px; }
+    .code-box {
+      background: var(--code-bg);
+      border-radius: 16px;
+      padding: 14px;
+      margin: 0 0 18px;
+    }
+    .code-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; color: var(--muted); }
+    .code {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin: 6px 0 10px;
+      word-break: break-all;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      margin-top: 10px;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: transparent; color: var(--text); border: 1px solid rgba(100, 116, 139, 0.35); }
+    .btn-copy {
+      display: inline-block;
+      width: auto;
+      margin: 0;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      background: var(--surface);
+      color: var(--text);
+    }
+    .copied { color: var(--ok); }
+    .steps { text-align: left; color: var(--muted); font-size: 0.92rem; margin: 18px 0 0; padding-left: 20px; line-height: 1.6; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="emoji">🏡</div>
+    <h1 id="title"></h1>
+    <p id="subtitle"></p>
+
+    <div class="code-box" id="codeBox">
+      <div class="code-label" id="codeLabel"></div>
+      <div class="code" id="code"></div>
+      <button class="btn btn-copy" id="copyBtn" type="button"></button>
+    </div>
+
+    <a class="btn btn-primary" id="openBtn" href="#"></a>
+    <a class="btn btn-secondary" id="storeBtn" href="#"></a>
+
+    <ol class="steps" id="steps"></ol>
+  </main>
+
+  <script>
+    (function () {
+      var PACKAGE = "com.aistudio.domestico.kzpqt";
+      var STORE_URL = "https://play.google.com/store/apps/details?id=" + PACKAGE;
+
+      var texts = {
+        tr: {
+          title: "Domestico'da bir eve davet edildiniz",
+          subtitle: "Ev işlerini ve alışveriş listesini birlikte takip etmek için haneye katılın.",
+          codeLabel: "DAVET KODU",
+          copy: "Kodu kopyala", copied: "Kopyalandı ✓",
+          open: "Uygulamada aç", store: "Google Play'den indir",
+          steps: ["Domestico'yu Google Play'den indirin ve giriş yapın.",
+                  "Bu bağlantıya tekrar dokunun ya da sağ üstteki 👥 düğmesine basın.",
+                  "\"Başka Bir Eve Katıl\" bölümüne davet kodunu girin."],
+          noCode: "Davet kodu bulunamadı. Lütfen size gönderilen bağlantının tamamını açın."
+        },
+        en: {
+          title: "You're invited to a home on Domestico",
+          subtitle: "Join the household to keep track of chores and the shopping list together.",
+          codeLabel: "INVITE CODE",
+          copy: "Copy code", copied: "Copied ✓",
+          open: "Open in the app", store: "Get it on Google Play",
+          steps: ["Install Domestico from Google Play and sign in.",
+                  "Tap this link again, or tap the 👥 button at the top right.",
+                  "Enter the invite code under \"Join Another Home\"."],
+          noCode: "No invite code found. Please open the complete link you were sent."
+        },
+        de: {
+          title: "Du wurdest zu einem Haushalt in Domestico eingeladen",
+          subtitle: "Tritt dem Haushalt bei, um Hausarbeiten und die Einkaufsliste gemeinsam zu organisieren.",
+          codeLabel: "EINLADUNGSCODE",
+          copy: "Code kopieren", copied: "Kopiert ✓",
+          open: "In der App öffnen", store: "Bei Google Play herunterladen",
+          steps: ["Installiere Domestico aus Google Play und melde dich an.",
+                  "Tippe erneut auf diesen Link oder oben rechts auf 👥.",
+                  "Gib den Code unter \"Anderem Haushalt beitreten\" ein."],
+          noCode: "Kein Einladungscode gefunden. Bitte öffne den vollständigen Link."
+        },
+        es: {
+          title: "Te han invitado a un hogar en Domestico",
+          subtitle: "Únete al hogar para llevar juntos las tareas y la lista de compras.",
+          codeLabel: "CÓDIGO DE INVITACIÓN",
+          copy: "Copiar código", copied: "Copiado ✓",
+          open: "Abrir en la app", store: "Descargar en Google Play",
+          steps: ["Instala Domestico desde Google Play e inicia sesión.",
+                  "Vuelve a tocar este enlace o toca el botón 👥 arriba a la derecha.",
+                  "Introduce el código en \"Unirse a otro hogar\"."],
+          noCode: "No se encontró ningún código. Abre el enlace completo que recibiste."
+        }
+      };
+
+      var lang = (navigator.language || "tr").slice(0, 2).toLowerCase();
+      var t = texts[lang] || texts.en;
+      document.documentElement.lang = texts[lang] ? lang : "en";
+
+      // Only accept invite-code characters; never inject raw query text into the page
+      var raw = new URLSearchParams(window.location.search).get("code") || "";
+      var code = raw.trim().toUpperCase();
+      var valid = /^[A-Z0-9-]{4,16}$/.test(code);
+
+      function setText(id, value) { document.getElementById(id).textContent = value; }
+
+      setText("title", t.title);
+      setText("subtitle", valid ? t.subtitle : t.noCode);
+      setText("codeLabel", t.codeLabel);
+      setText("copyBtn", t.copy);
+      setText("openBtn", t.open);
+      setText("storeBtn", t.store);
+
+      var steps = document.getElementById("steps");
+      t.steps.forEach(function (step) {
+        var li = document.createElement("li");
+        li.textContent = step;
+        steps.appendChild(li);
+      });
+
+      var storeBtn = document.getElementById("storeBtn");
+      storeBtn.href = STORE_URL;
+
+      var openBtn = document.getElementById("openBtn");
+      if (valid) {
+        setText("code", code);
+        // Android intent link: opens the app if installed, otherwise falls back to Google Play
+        var path = "uplwyr.github.io/join/?code=" + encodeURIComponent(code);
+        openBtn.href = "intent://" + path + "#Intent;scheme=https;package=" + PACKAGE +
+          ";S.browser_fallback_url=" + encodeURIComponent(STORE_URL) + ";end";
+      } else {
+        document.getElementById("codeBox").classList.add("hidden");
+        openBtn.classList.add("hidden");
+      }
+
+      var copyBtn = document.getElementById("copyBtn");
+      copyBtn.addEventListener("click", function () {
+        if (!navigator.clipboard) return;
+        navigator.clipboard.writeText(code).then(function () {
+          copyBtn.textContent = t.copied;
+          copyBtn.classList.add("copied");
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
